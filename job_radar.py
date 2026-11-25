@@ -20,7 +20,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 SOURCES_FILE = ROOT / "config" / "sources.json"
 STATE_FILE = ROOT / "data" / "state.json"
-GEMINI_MODEL = "gemini-2.5-flash-lite"  # Free-tier model; do not change to a paid model.
+GEMINI_MODEL = "gemini-3.5-flash-lite"  # Free-tier model; do not change to a paid model.
 USER_AGENT = "PersonalJobRadar/1.0 (+https://github.com/)"
 MAX_AI_JOBS_PER_CALL = 12
 MIN_ALERT_SCORE = 55

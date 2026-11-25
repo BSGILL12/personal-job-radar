@@ -1,7 +1,19 @@
 {
   "greenhouse": [],
-  "lever": [],
-  "ashby": [],
+  "lever": [
+    {
+      "company": "Sprinto",
+      "site": "Sprinto",
+      "enabled": true
+    }
+  ],
+  "ashby": [
+    {
+      "company": "Vanta",
+      "board": "vanta",
+      "enabled": true
+    }
+  ],
   "smartrecruiters": [],
   "workday": []
 }
