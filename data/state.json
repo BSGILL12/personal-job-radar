@@ -1,4 +1,353 @@
 {
-  "initialized": false,
-  "seen": {}
+  "initialized": true,
+  "seen": {
+    "lever:sprinto:7741921b-bf0b-49ed-8d23-9e3d1b5882b0": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-05T07:30:15Z"
+    },
+    "lever:sprinto:c68522c8-275a-4783-bcce-81276bbdabf0": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-05T06:29:32Z"
+    },
+    "lever:sprinto:a5aef50c-0cd2-40aa-9e66-d096198755de": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-05-26T07:34:35Z"
+    },
+    "lever:sprinto:f2cf494e-cb33-4afe-99e4-c9a9bdb01b37": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-19T14:31:54Z"
+    },
+    "lever:sprinto:acd12acc-902d-4cca-b0e4-6ec021df72c7": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-21T09:35:38Z"
+    },
+    "lever:sprinto:a9ee3743-ad31-4df4-a334-d918a37c619b": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-20T12:32:47Z"
+    },
+    "lever:sprinto:640fd9e7-76d3-463a-9c0c-7f31fc3a4c6f": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-04-20T10:55:58Z"
+    },
+    "lever:sprinto:5e866b3b-5580-4f00-ad16-3bbf3beb0ea3": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-23T09:31:31Z"
+    },
+    "lever:sprinto:d7421a35-f31b-4128-8cc5-7d2596514d01": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-12T14:29:22Z"
+    },
+    "lever:sprinto:28f041d3-9b31-4ed7-8d83-ec11f0d70dcb": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-07-28T06:29:02Z"
+    },
+    "lever:sprinto:446d7800-7fc2-4f0a-9a01-53c12c488f5a": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-20T11:12:09Z"
+    },
+    "lever:sprinto:78b7b003-6c37-4e49-a110-5f54d9e9bddf": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-21T06:55:39Z"
+    },
+    "lever:sprinto:96239caa-e8c8-4d04-a734-49fd6a12eb0f": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-01T17:30:01Z"
+    },
+    "lever:sprinto:438e57f0-5d7b-4984-92db-ff3f9e04b2e6": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-20T12:28:50Z"
+    },
+    "lever:sprinto:7759bc05-738b-4022-97c8-a91f9190d365": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-08T05:36:07Z"
+    },
+    "lever:sprinto:7e89750a-4013-4da8-9fa8-3e3112d9f46c": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-26T04:59:48Z"
+    },
+    "lever:sprinto:856517f8-cc53-4d48-a5aa-137734e61489": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-05-27T05:52:11Z"
+    },
+    "lever:sprinto:48e08392-303c-4334-8683-bd0bb4a4c7d9": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-25T15:51:40Z"
+    },
+    "lever:sprinto:99f385d5-5bc0-49b5-8f63-aea62f423c89": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-23T09:07:41Z"
+    },
+    "lever:sprinto:a1f3493f-9ff3-4198-a265-c88b71ba4f3d": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-07T06:17:52Z"
+    },
+    "lever:sprinto:e93a9b23-2136-4d16-8bf7-7f6a5d474f61": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-19T07:57:33Z"
+    },
+    "lever:sprinto:28e86724-78ef-49c0-ab4a-65bcabeab8c6": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-06T07:48:49Z"
+    },
+    "lever:sprinto:118943b2-e5cb-4002-8cd9-d7e77061fe49": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-16T08:55:27Z"
+    },
+    "lever:sprinto:e566f069-d92b-4808-ab81-405467605f14": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-03T13:34:59Z"
+    },
+    "lever:sprinto:a5f26631-6667-4de5-b5d6-944959deeabf": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-11T18:33:31Z"
+    },
+    "lever:sprinto:ac108b3b-9d20-4718-b020-7ecbee3f2036": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-24T16:56:54Z"
+    },
+    "ashby:vanta:7e8b02ec-cf23-41de-87c7-3910459f34a2": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-06-25T09:59:57Z"
+    },
+    "ashby:vanta:1513e1ac-5dca-4acb-a99d-8b5461115651": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2025-03-13T22:25:56Z"
+    },
+    "ashby:vanta:470689af-bbce-4c96-818e-408bf4a6c8e5": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-05-07T17:26:02Z"
+    },
+    "ashby:vanta:1df5ae9f-4bd2-4f9c-a4e3-55c2970a6383": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-08T13:54:02Z"
+    },
+    "ashby:vanta:c4652ceb-a50d-4dad-ab08-a386617a53f5": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-15T20:35:14Z"
+    },
+    "ashby:vanta:06fbe631-946a-4628-a3f8-9d5d523b9fb2": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-01-26T15:48:28Z"
+    },
+    "ashby:vanta:cb338edc-a332-4f01-ab3f-b3e45ade44ba": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-04-29T08:51:35Z"
+    },
+    "ashby:vanta:10098ac6-b0c1-4ba6-9903-6c5ebe85fe1e": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-17T11:53:27Z"
+    },
+    "ashby:vanta:bbaea4cf-1439-4996-b7b1-c10425413c3f": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-23T19:43:46Z"
+    },
+    "ashby:vanta:91c73485-5d0c-4272-9643-401ebcfff9d1": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-07-10T15:10:18Z"
+    },
+    "ashby:vanta:19837d21-971e-4b9d-b078-320895fae28a": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-07-06T21:11:35Z"
+    },
+    "ashby:vanta:0eb769bf-5444-491b-8721-2fc579ca4932": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-29T17:48:23Z"
+    },
+    "ashby:vanta:7d5ac715-c4ba-45d5-a390-665a93f618cd": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-06-12T14:43:51Z"
+    },
+    "ashby:vanta:c3b74285-982c-4648-bb79-d62c5b0adaf4": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-18T19:49:16Z"
+    },
+    "ashby:vanta:7816b5fe-e916-43b8-9200-d0d45298ba9f": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-05T00:08:34Z"
+    },
+    "ashby:vanta:362c9919-80c9-4c54-8f38-205b48000840": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-07-07T15:55:34Z"
+    },
+    "ashby:vanta:a2371f65-5777-47b7-9f4e-bcb260ce70a4": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-01T13:28:23Z"
+    },
+    "ashby:vanta:157384dc-0060-445c-8bee-ba11a3077e9a": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-01T13:28:30Z"
+    },
+    "ashby:vanta:d38e7474-2b44-415c-824a-3debb757c9af": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-20T14:34:32Z"
+    },
+    "ashby:vanta:70a8c96d-ab5d-4e3e-9ff3-7f45a3147be4": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-20T14:34:27Z"
+    },
+    "ashby:vanta:b64b6e72-7c71-446f-b6ce-662330b910e8": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-29T18:12:14Z"
+    },
+    "ashby:vanta:ffc75064-fbdc-4cd1-bf0e-a4ace20dce81": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-16T18:36:05Z"
+    },
+    "ashby:vanta:ef741fff-829e-4a9b-bca3-932f414db957": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-21T14:01:58Z"
+    },
+    "ashby:vanta:ec34a1ac-787a-4799-84ee-c22d8e239ba5": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-12T15:35:13Z"
+    },
+    "ashby:vanta:4ecbf29d-7566-471a-96de-d604489ae5d0": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-10T15:21:32Z"
+    },
+    "ashby:vanta:b604e8b8-a311-4848-9940-9ba77a67410c": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-06T23:39:49Z"
+    },
+    "ashby:vanta:b01ad813-3dd3-4603-ab81-75b14772b43b": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-23T17:51:56Z"
+    },
+    "ashby:vanta:c6090572-cbca-4b11-810e-127bf0183abf": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-03T17:03:03Z"
+    },
+    "ashby:vanta:0ccbb65f-f675-410a-ae54-1d34575f228a": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-26T19:04:45Z"
+    },
+    "ashby:vanta:20d2c9aa-19da-4370-9378-491312f6f98a": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-08-27T15:03:36Z"
+    },
+    "ashby:vanta:529a6e77-c965-4b32-be80-1837fbb3d1ce": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-03T15:01:45Z"
+    },
+    "ashby:vanta:38123211-8982-45af-a733-7c81eab67e84": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-03T15:01:48Z"
+    },
+    "ashby:vanta:53e5e530-687a-4734-90d0-3a60ae407c19": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-08T19:46:17Z"
+    },
+    "ashby:vanta:31cdf07c-21ab-460c-912e-f288dc38090e": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-30T13:21:59Z"
+    },
+    "ashby:vanta:b6122b6f-1f9f-45d0-8665-b1a7e89637ef": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-18T15:57:40Z"
+    },
+    "ashby:vanta:c752a8a1-5832-4d2a-a8c5-8b8308d6a7e2": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-02T21:35:14Z"
+    },
+    "ashby:vanta:9962b3c8-f1c4-4ad1-9308-7c8df6a28b28": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-02T20:55:36Z"
+    },
+    "ashby:vanta:99412127-8d8d-4d25-9393-73e4c17deef4": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-28T19:40:13Z"
+    },
+    "ashby:vanta:e7370d8b-259e-402b-b494-20a0f963b215": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-09-29T15:04:43Z"
+    },
+    "ashby:vanta:f19964fc-3df1-4ffd-bac2-0deedb1266a2": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-02T20:29:38Z"
+    },
+    "ashby:vanta:ee1f63bd-c72e-4e71-9011-b9b4560dbfe7": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-02T20:29:41Z"
+    },
+    "ashby:vanta:a44edb8b-d519-497d-81b9-451fad4753af": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-01T09:39:42Z"
+    },
+    "ashby:vanta:e8ed04e4-28ab-4108-95da-6282e9d6bf86": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-05T14:39:03Z"
+    },
+    "ashby:vanta:1d927532-02f2-45dc-a0b8-3d4242dcc38b": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-15T15:47:07Z"
+    },
+    "ashby:vanta:ecdf2c04-47a5-4360-a664-4341b9b355ce": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-13T14:33:21Z"
+    },
+    "ashby:vanta:f4be1821-a392-47e3-8bfa-385712892f9c": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-22T15:15:21Z"
+    },
+    "ashby:vanta:0ab177a8-3ea8-4b91-9a55-bfef435b0cfc": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-22T19:25:29Z"
+    },
+    "ashby:vanta:112c82ea-5825-4121-a43f-5e1902bec35c": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-26T17:34:12Z"
+    },
+    "ashby:vanta:bcdcc8fc-a277-43c3-98f5-2b0e536f28b2": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-26T17:34:17Z"
+    },
+    "ashby:vanta:cecaa30a-37a2-42aa-980e-ca44db8fdb34": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-10-26T17:33:16Z"
+    },
+    "ashby:vanta:29e92503-fecf-4ac4-9de7-683390fb74c6": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-03T18:25:26Z"
+    },
+    "ashby:vanta:55f57c1b-7a4b-4fb3-80c7-75f296085de2": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-03T02:47:24Z"
+    },
+    "ashby:vanta:e4e1f472-5113-4cd0-b8f9-dd10af087f5d": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-03T16:43:15Z"
+    },
+    "ashby:vanta:52664829-5308-4f7f-8a2c-f999d871b8b7": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-06T01:56:06Z"
+    },
+    "ashby:vanta:94ffa2d9-5d03-4b5d-8952-d421e080cbd2": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-19T17:27:56Z"
+    },
+    "ashby:vanta:82dd0fed-120e-4983-a1ae-676ae355cea8": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-05T18:42:13Z"
+    },
+    "ashby:vanta:3680f3ab-b470-46dd-b192-86ae69d54a31": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-05T23:56:09Z"
+    },
+    "ashby:vanta:383e20b0-b2c5-4c4f-9406-46f0a671a7bc": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-10T20:07:58Z"
+    },
+    "ashby:vanta:9bafb795-a5bb-4a68-97c6-d914b64b2e7b": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-03T17:29:22Z"
+    },
+    "ashby:vanta:541b3b0c-1c83-4a93-9f9a-b1e8c0ab9fe2": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-13T15:17:11Z"
+    },
+    "ashby:vanta:00e1dec2-f1a9-40ca-88d2-ff175a63b54d": {
+      "first_seen_at": "2026-11-25T19:46:45Z",
+      "published_at": "2026-11-25T16:52:47Z"
+    }
+  }
 }
