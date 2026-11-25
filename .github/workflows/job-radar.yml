@@ -10,6 +10,16 @@ on:
         required: false
         type: boolean
         default: false
+      test_telegram:
+        description: "Send a Telegram test message only; do not scan jobs"
+        required: false
+        type: boolean
+        default: false
+      test_groq:
+        description: "Test one Groq API request only; do not scan jobs"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -28,6 +38,8 @@ jobs:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       BASELINE_ONLY: ${{ inputs.baseline_only }}
+      TEST_TELEGRAM: ${{ inputs.test_telegram }}
+      TEST_GROQ: ${{ inputs.test_groq }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -37,7 +49,16 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Test Telegram delivery
+        if: ${{ inputs.test_telegram == true }}
+        run: python job_radar.py --test-telegram
+
+      - name: Test Groq AI connection
+        if: ${{ inputs.test_groq == true }}
+        run: python job_radar.py --test-groq
+
       - name: Scan official ATS feeds
+        if: ${{ inputs.test_telegram != true && inputs.test_groq != true }}
         run: |
           if [ "$BASELINE_ONLY" = "true" ]; then
             python job_radar.py --baseline-only
@@ -46,6 +67,7 @@ jobs:
           fi
 
       - name: Save deduplication state
+        if: ${{ inputs.test_telegram != true && inputs.test_groq != true }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -54,5 +76,5 @@ jobs:
             git commit -m "Update job radar state [skip ci]"
             git push
           else
-            echo "No state changes to commit."
+            echo "No state changes to commit; existing deduplication state is unchanged."
           fi

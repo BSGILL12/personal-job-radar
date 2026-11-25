@@ -403,12 +403,13 @@ Rules: Never invent salary, posting date, location eligibility, company facts, o
         return {}
 
 
-def send_telegram(text: str) -> None:
+def send_telegram(text: str) -> bool:
+    """Send a message to Telegram. False means the alert was not confirmed."""
     token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
     chat_id = os.getenv("TELEGRAM_CHAT_ID", "").strip()
     if not token or not chat_id:
-        print("INFO: Telegram not configured; results are in the workflow log.")
-        return
+        print("ERROR: Telegram secrets missing. Add TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.")
+        return False
     chunks = []
     remaining = text
     while len(remaining) > 3800:
@@ -419,12 +420,22 @@ def send_telegram(text: str) -> None:
         remaining = remaining[cut:].lstrip()
     if remaining:
         chunks.append(remaining)
-    for chunk in chunks:
+    for index, chunk in enumerate(chunks, 1):
         url = f"https://api.telegram.org/bot{token}/sendMessage"
         try:
-            http_json(url, method="POST", payload={"chat_id": chat_id, "text": chunk, "disable_web_page_preview": True})
+            response = http_json(
+                url, method="POST",
+                payload={"chat_id": chat_id, "text": chunk, "disable_web_page_preview": True}
+            )
+            if not isinstance(response, dict) or not response.get("ok"):
+                description = response.get("description", "Unknown Telegram API error") if isinstance(response, dict) else "Invalid Telegram response"
+                print(f"ERROR: Telegram rejected message {index}/{len(chunks)}: {description}")
+                return False
         except Exception as exc:
-            print(f"WARNING: Telegram notification failed: {type(exc).__name__}: {exc}")
+            print(f"ERROR: Telegram message {index}/{len(chunks)} failed: {type(exc).__name__}: {exc}")
+            return False
+    print(f"Telegram delivery confirmed ({len(chunks)} message chunk(s)).")
+    return True
 
 
 def format_ist(value: str | None) -> str:
@@ -445,7 +456,7 @@ def make_alert(jobs: list[dict], scores: dict[str, dict]) -> str:
     if not ranked:
         return ""
     lines = [f"🚨 JOB RADAR — {len(ranked)} new role(s) matching your profile", "Only newly detected roles; fit score is not hiring probability.", ""]
-    for i, job in enumerate(ranked[:10], 1):
+    for i, job in enumerate(ranked, 1):
         published = job.get("published_at")
         date_label = (f"Published (source timestamp): {format_ist(published)}" if published
                       else f"First seen (feed does not expose publish time): {format_ist(job.get('first_seen_at'))}")
@@ -460,15 +471,48 @@ def make_alert(jobs: list[dict], scores: dict[str, dict]) -> str:
             f"Official listing: {job.get('url', '')}",
             ""
         ])
-    if len(ranked) > 10:
-        lines.append(f"Plus {len(ranked) - 10} additional qualifying role(s) in the run log.")
     return "\n".join(lines)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Scan configured ATS feeds and alert on new matching jobs.")
     parser.add_argument("--baseline-only", action="store_true", help="Record currently visible jobs without alerting.")
+    parser.add_argument("--test-telegram", action="store_true", help="Send a test message to the configured Telegram chat.")
+    parser.add_argument("--test-groq", action="store_true", help="Make one small Groq API test request using a synthetic job.")
     args = parser.parse_args()
+
+    # Integration tests do not scan jobs or alter the deduplication state.
+    if args.test_telegram:
+        test_message = (
+            "✅ PERSONAL JOB RADAR — TELEGRAM TEST SUCCESSFUL\n\n"
+            "GitHub Actions can reach your Telegram bot and chat.\n"
+            "This is a test only; no job scan was performed and no job state was changed."
+        )
+        return 0 if send_telegram(test_message) else 1
+
+    if args.test_groq:
+        api_key = os.getenv("GROQ_API_KEY", "").strip()
+        if not api_key:
+            print("ERROR: GROQ_API_KEY is missing from GitHub Actions Secrets.")
+            return 1
+        profile = get_profile()
+        sample_job = {
+            "id": "job-radar-groq-connectivity-test",
+            "company": "Example SaaS Company",
+            "title": "GRC Automation Engineer",
+            "location": "Remote - India",
+            "url": "https://example.com/careers/grc-automation-engineer",
+            "description": "Example test posting: ISO 27001, SOC 2, FedRAMP, NIST 800-53, Python automation, evidence workflows, AWS compliance and API integrations. This is synthetic test data, not a real vacancy."
+        }
+        result = groq_score_batch([sample_job], profile, api_key)
+        if sample_job["id"] not in result:
+            print("ERROR: Groq test did not return a valid score. Check the API key, model access and free-plan quota.")
+            return 1
+        item = result[sample_job["id"]]
+        print("Groq API test successful.")
+        print(f"Test fit score: {item.get('fit_score', 'n/a')}/100 (synthetic test job; not a real vacancy).")
+        print(f"Scoring method: {item.get('scoring_method', 'Groq AI')}")
+        return 0
 
     sources = load_json(SOURCES_FILE, {})
     if not isinstance(sources, dict):
@@ -486,7 +530,7 @@ def main() -> int:
     seen = state["seen"]
 
     # On the very first successful scan, create a silent baseline. This avoids
-    # incorrectly labelling months-old vacancies as newly published.
+    # incorrectly labelling vacancies already visible at setup time as new.
     if args.baseline_only or (not state.get("initialized") and jobs):
         for job in jobs:
             seen.setdefault(job["id"], {"first_seen_at": now_text, "published_at": job.get("published_at")})
@@ -501,46 +545,56 @@ def main() -> int:
     for job in jobs:
         if job["id"] in seen:
             continue
-        first_seen = now
-        job["first_seen_at"] = iso_utc(first_seen)
+        job["first_seen_at"] = now_text
         seen[job["id"]] = {"first_seen_at": job["first_seen_at"], "published_at": job.get("published_at")}
         pub = parse_datetime(job.get("published_at"))
         if pub:
             if pub >= cutoff:
                 new_in_window.append(job)
         else:
-            # The feed does not disclose publication time: retain this as a
-            # clearly labelled first-seen result, never claim it was published now.
+            # When a feed has no publication timestamp, label the observation honestly as First seen.
             new_in_window.append(job)
 
     state["initialized"] = True
-    # One small daily heartbeat keeps a public repo from looking inactive,
-    # without creating a commit on every five-minute scan.
-    state["last_heartbeat_date"] = now.astimezone(timezone.utc).strftime("%Y-%m-%d")
+    state["last_heartbeat_date"] = now.strftime("%Y-%m-%d")
     STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     if not new_in_window:
+        STATE_FILE.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print("No newly detected roles within the 24-hour publication/first-seen window.")
         return 0
 
     profile = get_profile()
     api_key = os.getenv("GROQ_API_KEY", "").strip()
-    # Prioritize the strongest keyword matches for the small free-plan AI batch.
     ai_candidates = sorted(
         new_in_window,
         key=lambda job: local_score(job, profile)["fit_score"],
         reverse=True
     )
-    ai_scores = groq_score_batch(ai_candidates, profile, api_key) if api_key else {}
+    if api_key:
+        ai_scores = groq_score_batch(ai_candidates, profile, api_key)
+        if ai_scores:
+            print(f"Groq AI successfully scored {len(ai_scores)} job(s); remaining new jobs use local scoring.")
+        else:
+            print("Groq AI returned no usable scores; local scoring is used for this scan.")
+    else:
+        print("GROQ_API_KEY is missing; local scoring is used for this scan.")
+        ai_scores = {}
     scores = {job["id"]: ai_scores.get(job["id"], local_score(job, profile)) for job in new_in_window}
     alert = make_alert(new_in_window, scores)
+
     if alert:
-        send_telegram(alert)
+        # Do not let the workflow commit deduplication state unless Telegram confirms
+        # the complete alert. A failed delivery therefore gets retried next scan.
+        if not send_telegram(alert):
+            print("ERROR: Alert delivery was not confirmed. Deduplication state was NOT saved; the next scheduled scan will retry.")
+            return 1
         print(alert)
     else:
         print(f"Detected {len(new_in_window)} new job(s), but none reached the {MIN_ALERT_SCORE}/100 alert threshold.")
-    print("State updated; run commit in the GitHub workflow to preserve deduplication.")
+
+    STATE_FILE.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"Deduplication state updated for {len(seen)} total requisition IDs.")
     return 0
 
 
