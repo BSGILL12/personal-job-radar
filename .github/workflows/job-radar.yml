@@ -1,0 +1,58 @@
+name: Job Radar
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      baseline_only:
+        description: "Silently record current listings (use after adding new ATS boards)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: job-radar-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      JOB_RADAR_PROFILE_JSON: ${{ secrets.JOB_RADAR_PROFILE_JSON }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      BASELINE_ONLY: ${{ inputs.baseline_only }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Scan official ATS feeds
+        run: |
+          if [ "$BASELINE_ONLY" = "true" ]; then
+            python job_radar.py --baseline-only
+          else
+            python job_radar.py
+          fi
+
+      - name: Save deduplication state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update job radar state [skip ci]"
+            git push
+          else
+            echo "No state changes to commit."
+          fi
