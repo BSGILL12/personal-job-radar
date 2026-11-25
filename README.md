@@ -6,14 +6,14 @@ This starter scans configured public ATS job feeds, deduplicates requisitions, c
 
 - **Hosting:** GitHub Actions, scheduled every 5 minutes. Standard GitHub-hosted runners are free for public repositories. The schedule can be delayed by GitHub during busy periods.
 - **No Cloudflare account. No credit/debit card is required by this setup.**
-- **AI:** optional Gemini API call using `gemini-2.5-flash-lite` on the free tier. If no key is configured or the free quota is exhausted, a local keyword scorer runs instead. Do not connect Cloud Billing or upgrade this project. Do not change the model to a paid model.
+- **AI:** optional Groq API call using `openai/gpt-oss-20b` on the Groq Free Plan. If no key is configured or the free quota is exhausted, a local keyword scorer runs instead. Do not upgrade to the Developer plan or add a payment method.
 - **No runtime Python packages:** Python standard library only.
 - **Notifications:** Telegram bot; free to use for personal alerts.
 - `data/state.json` stores only public requisition IDs and timestamps so repeat scans do not alert on the same job. The file is committed to the public repository.
 - Keep all API tokens and your detailed profile in GitHub Actions Secrets. Never put tokens in source files, commits, screenshots, or `sources.json`.
-- Gemini's free tier may use submitted prompts to improve Google products. The prompt sends job-posting text plus a generic skills profile, not a CV or personal identifiers. Do not put confidential material in the profile.
+- Groq says inference inputs and outputs are not retained by default, but may be logged for system reliability or abuse monitoring for up to 30 days. The prompt sends public job-posting text plus a generic skills profile, not a CV or personal identifiers. Do not put confidential material in the profile.
 
-**Zero-payment guardrail:** use a public GitHub repository; do not add a payment method to Cloudflare (not used), do not link a Google Cloud Billing account, do not upgrade Gemini, and do not configure any paid API or runner. A quota limit should cause AI scoring to fall back locally, not switch to a paid service.
+**Zero-payment guardrail:** use a public GitHub repository; do not add a payment method to Cloudflare (not used), do not link a Google Cloud Billing account, do not upgrade Groq to Developer tier, and do not configure any paid API or runner. A quota limit should cause AI scoring to fall back locally, not switch to a paid service.
 
 ## What is supported in this version
 
@@ -23,7 +23,7 @@ This starter scans configured public ATS job feeds, deduplicates requisitions, c
 - SmartRecruiters public postings API
 - Workday public CXS jobs endpoint (requires tenant, site, and base URL)
 
-The scanner only sees the companies/boards you add in `config/sources.json`. It does not scrape LinkedIn and it cannot discover every employer on the internet. Company career pages that do not expose one of these public feeds need a separate connector.
+The starter configuration includes Sprinto (Lever) and Vanta (Ashby) as initial employer feeds. Add more verified official ATS boards to `config/sources.json` as needed. The scanner only sees configured companies; it does not scrape LinkedIn and it cannot discover every employer on the internet. Company career pages that do not expose one of these public feeds need a separate connector.
 
 ## 1. Create a public GitHub repository
 
@@ -101,15 +101,16 @@ Add one employer at a time and verify the Action log shows a nonzero job count. 
 
 If you do not configure Telegram, scan results appear in the GitHub Actions log only.
 
-## 5. Enable the free Gemini AI layer (optional)
+## 5. Enable the Groq AI layer (required for AI scoring)
 
-1. Open Google AI Studio: https://aistudio.google.com/apikey
-2. Create an API key on the free tier.
-3. **Do not click “Set up billing”, do not add/link a payment method, and do not upgrade the project.**
-4. Add the key as the GitHub Actions secret `GEMINI_API_KEY`.
-5. The script uses `gemini-2.5-flash-lite` only. It does not use Google Search grounding or other billable tools.
+1. Open Groq Console: https://console.groq.com/ and sign in.
+2. Open API Keys: https://console.groq.com/keys.
+3. Create an API key named `Personal Job Radar` and copy it immediately.
+4. Add the key as the GitHub Actions secret `GROQ_API_KEY`.
+5. Stay on the Free Plan. **Do not upgrade to Developer, add a payment method, or enable paid usage.**
+6. The script calls `https://api.groq.com/openai/v1/chat/completions` using model `openai/gpt-oss-20b`. It uses the standard library; no Python SDK installation is required.
 
-If AI quota is exhausted, the scanner falls back to local scoring. Google's free-tier data-use terms differ from its paid tier; don't send your resume, personal data, confidential work details, or employer documents. Only public job text and a generic skill profile are sent.
+The Groq Free Plan is rate-limited. When the limit is reached or the API is unavailable, the scanner falls back to local scoring and never switches to paid usage. Groq states that inference inputs/outputs are not retained by default, except limited system reliability/abuse-monitoring cases (up to 30 days); do not send your resume, personal identifiers, confidential work details, or employer documents. Only public job text and a generic skill profile are sent.
 
 ## 6. First run and monitoring
 

@@ -20,9 +20,9 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parent
 SOURCES_FILE = ROOT / "config" / "sources.json"
 STATE_FILE = ROOT / "data" / "state.json"
-GEMINI_MODEL = "gemini-3.5-flash-lite"  # Free-tier model; do not change to a paid model.
+GROQ_MODEL = "openai/gpt-oss-20b"  # Groq Free Plan model; do not upgrade to Developer tier.
 USER_AGENT = "PersonalJobRadar/1.0 (+https://github.com/)"
-MAX_AI_JOBS_PER_CALL = 12
+MAX_AI_JOBS_PER_CALL = 3
 MIN_ALERT_SCORE = 55
 
 DEFAULT_PROFILE = {
@@ -316,13 +316,18 @@ def local_score(job: dict, profile: dict) -> dict:
     }
 
 
-def gemini_score_batch(jobs: list[dict], profile: dict, api_key: str) -> dict[str, dict]:
+def groq_score_batch(jobs: list[dict], profile: dict, api_key: str) -> dict[str, dict]:
+    """Score a small batch using Groq's OpenAI-compatible API; no SDK required."""
     if not jobs or not api_key:
         return {}
+
     compact_jobs = [{
         "id": j["id"], "company": j["company"], "title": j["title"],
-        "location": j["location"], "url": j["url"], "description": j["description"][:8500]
+        "location": j["location"], "url": j["url"],
+        # Keep the request comfortably within the Groq Free Plan token limits.
+        "description": j["description"][:2200]
     } for j in jobs[:MAX_AI_JOBS_PER_CALL]]
+
     prompt = f"""You are a careful job-fit analyst. Compare each public job posting against this candidate profile.
 Candidate profile (generic skills only; do not infer identity):
 {json.dumps(profile, ensure_ascii=False)}
@@ -330,45 +335,71 @@ Candidate profile (generic skills only; do not infer identity):
 Jobs:
 {json.dumps(compact_jobs, ensure_ascii=False)}
 
-Return ONLY valid JSON: an array with one object per input job. Every object must contain:
+Return one JSON object with a top-level key \"jobs\" whose value is an array with one object per input job. Every object must contain:
 - id (exact input id)
 - fit_score (integer 0-100; profile match, NOT hiring probability)
-- employer_quality_score (integer 0-100; separate from fit; evaluate product/SaaS relevance, company maturity/reputation only when supported; otherwise use 50)
+- employer_quality_score (integer 0-100; separate from fit; evaluate product/SaaS relevance and employer maturity only when supported; otherwise use 50)
 - employer_quality_note (one short sentence; say when evidence is insufficient)
 - match_reasons (array of up to 4 concise evidence-based reasons)
 - experience_gaps (array of up to 4 actual mandatory requirements not evidenced in profile; do not treat absent posting details as candidate deficiencies)
 - compensation (quote only what the posting explicitly states, otherwise exactly 'Not disclosed')
-Rules: Never invent salary, posting date, location eligibility, company facts, or experience. Do not use the current employer identity. Distinguish skills evidence from requirements that are merely not mentioned. A job with unclear India remote eligibility must say so. Do not score hiring probability. No markdown fences."""
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={urllib.parse.quote(api_key)}"
+Rules: Never invent salary, posting date, location eligibility, company facts, or experience. Do not use the current employer identity. Distinguish skills evidence from requirements that are merely not mentioned. A job with unclear India remote eligibility must say so. Do not score hiring probability. Output valid JSON only; no markdown fences or commentary."""
+
     payload = {
-        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.1, "maxOutputTokens": 5000, "responseMimeType": "application/json"}
+        "model": GROQ_MODEL,
+        "messages": [
+            {"role": "system", "content": "You are a careful, evidence-based job-fit analyst. Output valid JSON only."},
+            {"role": "user", "content": prompt}
+        ],
+        "response_format": {"type": "json_object"},
+        "max_tokens": 2200,
+        "reasoning_effort": "low"
     }
+
     try:
-        data = http_json(url, method="POST", payload=payload)
-        text = data["candidates"][0]["content"]["parts"][0]["text"]
-        parsed = json.loads(text)
+        data = http_json(
+            "https://api.groq.com/openai/v1/chat/completions",
+            method="POST",
+            payload=payload,
+            headers={"Authorization": f"Bearer {api_key}"}
+        )
+        content = data["choices"][0]["message"]["content"]
+        parsed = json.loads(content)
         if isinstance(parsed, dict):
             parsed = parsed.get("jobs", [])
-        out = {}
+
+        out: dict[str, dict] = {}
         for item in parsed if isinstance(parsed, list) else []:
             if not isinstance(item, dict) or not item.get("id"):
                 continue
+            reasons = item.get("match_reasons", [])
+            gaps = item.get("experience_gaps", [])
+            if not isinstance(reasons, list):
+                reasons = []
+            if not isinstance(gaps, list):
+                gaps = []
+            try:
+                fit_score = int(item.get("fit_score", 50))
+            except (TypeError, ValueError):
+                fit_score = 50
+            try:
+                quality_score = int(item.get("employer_quality_score", 50))
+            except (TypeError, ValueError):
+                quality_score = 50
             jid = str(item["id"])
-            clean = {
-                "fit_score": max(0, min(100, int(item.get("fit_score", 50)))),
-                "employer_quality_score": max(0, min(100, int(item.get("employer_quality_score", 50)))),
+            out[jid] = {
+                "fit_score": max(0, min(100, fit_score)),
+                "employer_quality_score": max(0, min(100, quality_score)),
                 "employer_quality_note": str(item.get("employer_quality_note", "Not enough evidence to assess."))[:300],
-                "match_reasons": [str(x)[:250] for x in item.get("match_reasons", [])[:4]],
-                "experience_gaps": [str(x)[:250] for x in item.get("experience_gaps", [])[:4]],
+                "match_reasons": [str(x)[:250] for x in reasons[:4]],
+                "experience_gaps": [str(x)[:250] for x in gaps[:4]],
                 "compensation": str(item.get("compensation", "Not disclosed"))[:300],
-                "scoring_method": f"AI: {GEMINI_MODEL} (free-tier project only)"
+                "scoring_method": f"AI: Groq {GROQ_MODEL} (free plan; subject to rate limits)"
             }
-            out[jid] = clean
         return out
     except Exception as exc:
-        # If free quota is exhausted or model unavailable, fall back without retrying or upgrading.
-        print(f"WARNING: Gemini unavailable / quota reached; using local scores. Details: {type(exc).__name__}: {exc}")
+        # Any API, quota, or parsing issue falls back locally; never switch to paid service.
+        print(f"WARNING: Groq unavailable / free limit reached; using local scores. Details: {type(exc).__name__}: {exc}")
         return {}
 
 
@@ -494,8 +525,14 @@ def main() -> int:
         return 0
 
     profile = get_profile()
-    api_key = os.getenv("GEMINI_API_KEY", "").strip()
-    ai_scores = gemini_score_batch(new_in_window, profile, api_key) if api_key else {}
+    api_key = os.getenv("GROQ_API_KEY", "").strip()
+    # Prioritize the strongest keyword matches for the small free-plan AI batch.
+    ai_candidates = sorted(
+        new_in_window,
+        key=lambda job: local_score(job, profile)["fit_score"],
+        reverse=True
+    )
+    ai_scores = groq_score_batch(ai_candidates, profile, api_key) if api_key else {}
     scores = {job["id"]: ai_scores.get(job["id"], local_score(job, profile)) for job in new_in_window}
     alert = make_alert(new_in_window, scores)
     if alert:
