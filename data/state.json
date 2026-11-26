@@ -356,6 +356,10 @@
     "lever:sprinto:6bf992d1-e5f4-4c7d-8c96-80617e91b75d": {
       "first_seen_at": "2026-11-26T09:30:20Z",
       "published_at": "2026-11-26T05:26:10Z"
+    },
+    "lever:sprinto:5ca7f8de-8ff6-4738-8ef7-c8308a3095fc": {
+      "first_seen_at": "2026-11-26T19:22:22Z",
+      "published_at": "2026-11-26T12:45:09Z"
     }
   },
   "last_heartbeat_date": "2026-11-26"
